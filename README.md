@@ -1,3 +1,5 @@
+[![Go report card](https://goreportcard.com/badge/github.com/evantbyrne/cryptdir)](https://goreportcard.com/report/github.com/evantbyrne/cryptdir)
+
 # cryptdir
 
 Utility for managing folders containing files encrypted with AES-256 GCM and Scrypt.
