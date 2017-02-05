@@ -27,6 +27,9 @@ Make sure that [Go](https://golang.org/) is installed and your PATH includes GOB
       help [<command>...]
         Show help.
 
+      ls [<flags>]
+        List encrypted files.
+
       read <read_name>
         Read encrypted file.
 
@@ -54,6 +57,17 @@ Read and write encrypted files from an unlocked shell, lock shell by exiting:
     exit
     $ cryptdir read hello.txt
     2017/02/05 13:42:27 The encrypted directory is locked. Please run `cryptdir unlock` to unlock.
+
+Listing encrypted files from an unlocked shell:
+
+    cryptdir> cryptdir ls
+    foo.txt
+    hello.txt
+    zebra.png
+    cryptdir> cryptdir ls -ms
+    ZzvBpUZDpXVJmbLi foo.txt
+    nUyWajppDtwLrLxj hello.txt
+    xShsSwNrGNmnFyeC zebra.png
 
 
 ## Encrypted data format

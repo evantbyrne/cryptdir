@@ -71,6 +71,28 @@ func mustGetWorkingDir() (workingDir string) {
 	return workingDir
 }
 
+func CommandList(mapped, short bool) {
+	var (
+		config    Config
+		configDir string
+		password  []byte
+	)
+
+	password = []byte(mustGetEnvPassword())
+	configDir = mustGetWorkingDir()
+	config, _, _, _ = ConfigRead(configDir, password)
+
+	for fileName, rawFileName := range config.Files {
+		if mapped && short {
+			fmt.Printf("%s %s\n", rawFileName[0:16], fileName)
+		} else if mapped {
+			fmt.Printf("%s %s\n", rawFileName, fileName)
+		} else {
+			fmt.Println(fileName)
+		}
+	}
+}
+
 func CommandRead(fileName string) {
 	var (
 		cleartext []byte

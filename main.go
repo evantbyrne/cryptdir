@@ -13,6 +13,10 @@ var (
 
 	app = kingpin.New("cryptdir", "Utility for managing folders containing files encrypted with AES-256 GCM and Scrypt.")
 
+	appLs      = app.Command("ls", "List encrypted files.")
+	appLsMap   = appLs.Flag("map", "Show filesystem names.").Short('m').Bool()
+	appLsShort = appLs.Flag("short", "Truncate filesystem names.").Short('s').Bool()
+
 	appRead         = app.Command("read", "Read encrypted file.")
 	appReadFileName = appRead.Arg("read_name", "File name.").Required().String()
 
@@ -28,6 +32,9 @@ func main() {
 	)
 
 	switch kp {
+
+	case appLs.FullCommand():
+		cryptdir.CommandList(*appLsMap, *appLsShort)
 
 	case appRead.FullCommand():
 		cryptdir.CommandRead(*appReadFileName)
