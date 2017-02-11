@@ -1,4 +1,4 @@
-package pa
+package lib
 
 import (
 	"fmt"
@@ -17,59 +17,6 @@ const (
 	rawFileNameLength = 250
 	shellPrompt       = "cryptdir> "
 )
-
-func getRawFileName(config Config, fileName string) string {
-	if _, ok := config.Files[fileName]; ok {
-		return config.Files[fileName]
-	}
-
-	allRawNames := make([]string, 0, len(config.Files))
-
-	for _, value := range config.Files {
-		allRawNames = append(allRawNames, value)
-	}
-
-	return getRawFileNameUnique(allRawNames)
-}
-
-func getRawFileNameUnique(allRawNames []string) string {
-	var (
-		rawPath string
-	)
-
-	rawPath = RandomString(rawFileNameLength, false, true, true)
-
-	for _, value := range allRawNames {
-
-		if value == rawPath {
-			return getRawFileNameUnique(allRawNames)
-		}
-	}
-
-	return rawPath
-}
-
-func mustGetEnvPassword() (password string) {
-	password = os.Getenv(envPassword)
-	if password == "" {
-		log.Fatal(messageLocked)
-	}
-
-	return password
-}
-
-func mustGetWorkingDir() (workingDir string) {
-	var (
-		err error
-	)
-
-	workingDir, err = os.Getwd()
-	if err != nil {
-		log.Fatal(messageWorkingDir)
-	}
-
-	return workingDir
-}
 
 func CommandList(mapped, short bool) {
 	var (

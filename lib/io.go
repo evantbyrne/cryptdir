@@ -1,11 +1,10 @@
-package pa
+package lib
 
 import (
-	"encoding/binary"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -13,34 +12,8 @@ type Config struct {
 	Files map[string]string `json:"files"`
 }
 
-const currentVersion uint32 = 1
 const dirMode = 0700
 const fileMode = 0600
-
-func configJoin(ciphertext, nonce, salt []byte) []byte {
-	out := make([]byte, 4)
-	binary.LittleEndian.PutUint32(out, currentVersion)
-
-	out = append(out, salt...)
-	out = append(out, nonce...)
-	out = append(out, ciphertext...)
-
-	return out
-}
-
-func configSplit(data, password []byte) (ciphertext, nonce, key, salt []byte, err error) {
-	if len(data) < 25 {
-		return nil, nil, nil, nil, errors.New("Invalid config data length.")
-	}
-
-	// version = data[:4] uint32 reserved for later use.
-	salt = data[4:16]
-	nonce = data[16:28]
-	ciphertext = data[28:]
-	key = NewKey(salt, password)
-
-	return ciphertext, nonce, key, salt, nil
-}
 
 func ConfigRead(configDir string, password []byte) (config Config, nonce, key, salt []byte) {
 	var (
@@ -83,7 +56,6 @@ func DecryptFile(path string, password []byte) (cleartext, nonce, key, salt []by
 
 		var (
 			ciphertext []byte
-			cleartext  []byte
 			configData []byte
 		)
 
@@ -92,22 +64,23 @@ func DecryptFile(path string, password []byte) (cleartext, nonce, key, salt []by
 			os.Exit(1)
 		}
 
-		if ciphertext, nonce, key, salt, err = configSplit(configData, password); err != nil {
+		if _, salt, nonce, ciphertext, err = VersionedSplit(configData); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+
+		key = NewKey(salt, password)
 
 		if cleartext, err = Decrypt(ciphertext, nonce, key); err != nil {
 			fmt.Printf("Could not decrypt '%s' with given password.\n", path)
 			os.Exit(1)
 		}
 
-		return cleartext, nonce, key, salt
+	} else {
+		nonce = NewNonce()
+		salt = NewNonce()
+		key = NewKey(salt, password)
 	}
-
-	nonce = NewNonce()
-	salt = NewNonce()
-	key = NewKey(salt, password)
 
 	return cleartext, nonce, key, salt
 }
@@ -123,8 +96,61 @@ func EncryptFile(path string, cleartext, nonce, key, salt []byte) {
 		os.Exit(1)
 	}
 
-	if err := ioutil.WriteFile(path, configJoin(ciphertext, nonce, salt), fileMode); err != nil {
+	if err := ioutil.WriteFile(path, VersionedJoin(salt, nonce, ciphertext), fileMode); err != nil {
 		fmt.Printf("Could not write file at '%s'.", path)
 		os.Exit(1)
 	}
+}
+
+func getRawFileName(config Config, fileName string) string {
+	if _, ok := config.Files[fileName]; ok {
+		return config.Files[fileName]
+	}
+
+	allRawNames := make([]string, 0, len(config.Files))
+
+	for _, value := range config.Files {
+		allRawNames = append(allRawNames, value)
+	}
+
+	return getRawFileNameUnique(allRawNames)
+}
+
+func getRawFileNameUnique(allRawNames []string) string {
+	var (
+		rawPath string
+	)
+
+	rawPath = RandomString(rawFileNameLength, false, true, true)
+
+	for _, value := range allRawNames {
+
+		if value == rawPath {
+			return getRawFileNameUnique(allRawNames)
+		}
+	}
+
+	return rawPath
+}
+
+func mustGetEnvPassword() (password string) {
+	password = os.Getenv(envPassword)
+	if password == "" {
+		log.Fatal(messageLocked)
+	}
+
+	return password
+}
+
+func mustGetWorkingDir() (workingDir string) {
+	var (
+		err error
+	)
+
+	workingDir, err = os.Getwd()
+	if err != nil {
+		log.Fatal(messageWorkingDir)
+	}
+
+	return workingDir
 }

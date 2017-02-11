@@ -1,4 +1,4 @@
-package pa
+package lib
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ func TestEncryptAndDecrypt(t *testing.T) {
 	salt := NewNonce()
 	key := NewKey(salt, password)
 	nonce := NewNonce()
-	ciphertext, err := Encrypt(key, nonce, cleartext)
+	ciphertext, err := Encrypt(cleartext, nonce, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,7 +20,8 @@ func TestEncryptAndDecrypt(t *testing.T) {
 		t.Fatal("Ciphertext and cleartext are the same.")
 	}
 
-	decrypted, err := Decrypt(key, nonce, ciphertext)
+	decrypted, err := Decrypt(ciphertext, nonce, key)
+
 	if err != nil {
 		t.Fatal(err)
 	}

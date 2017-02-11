@@ -1,4 +1,4 @@
-package pa
+package lib
 
 import (
 	"crypto/aes"
