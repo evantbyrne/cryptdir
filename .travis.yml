@@ -3,5 +3,8 @@ language: go
 go:
   - 1.7.x
 
+install:
+  - go get -u github.com/evantbyrne/cryptdir
+
 script:
   - go test -v ./lib
