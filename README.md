@@ -1,4 +1,4 @@
-[![Go report card](https://goreportcard.com/badge/github.com/evantbyrne/cryptdir)](https://goreportcard.com/report/github.com/evantbyrne/cryptdir)
+[![Travis CI](https://api.travis-ci.org/evantbyrne/cryptdir.svg?branch=master)](https://travis-ci.org/evantbyrne/cryptdir) [![Go report card](https://goreportcard.com/badge/github.com/evantbyrne/cryptdir)](https://goreportcard.com/report/github.com/evantbyrne/cryptdir)
 
 # cryptdir
 
