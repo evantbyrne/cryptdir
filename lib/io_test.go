@@ -41,6 +41,40 @@ func TestEncryptFileAndDecryptFile(t *testing.T) {
 	assert.Equal(t, salt1, salt2, "salt should match")
 }
 
+func TestConfigReadAndConfigWrite(t *testing.T) {
+	var (
+		config1  Config
+		config2  Config
+		key1     []byte
+		key2     []byte
+		nonce1   []byte
+		nonce2   []byte
+		password []byte
+		salt1    []byte
+		salt2    []byte
+	)
+
+	tmp, err := ioutil.TempDir("", "")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	config1.Files = make(map[string]string, 1)
+	config1.Files["foo"] = "bar"
+	password = []byte("mysuperdupersecurepassword")
+	salt1 = NewNonce()
+	key1 = NewKey(salt1, password)
+	nonce1 = NewNonce()
+
+	ConfigWrite(tmp, config1, nonce1, key1, salt1)
+	config2, nonce2, key2, salt2 = ConfigRead(tmp, password)
+
+	assert.True(t, assert.ObjectsAreEqual(config1, config2), "config should match.\nExpected: %v\nActual: %v", config1, config2)
+	assert.Equal(t, nonce1, nonce2, "nonce should match")
+	assert.Equal(t, key1, key2, "key should match")
+	assert.Equal(t, salt1, salt2, "salt should match")
+}
+
 func TestGetRawFileName(t *testing.T) {
 	var (
 		config     Config
