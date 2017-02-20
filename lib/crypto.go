@@ -4,7 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"github.com/golang/crypto/scrypt"
+	"golang.org/x/crypto/scrypt"
 	"log"
 	"math/big"
 )

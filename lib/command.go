@@ -7,7 +7,7 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/golang/crypto/ssh/terminal"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 const (
