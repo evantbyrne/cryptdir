@@ -7,8 +7,8 @@ go:
   - 1.8.x
 
 install:
-  - git clone --recursive https://github.com/evantbyrne/cryptdir.git $GOPATH"/src/github.com/evantbyrne/cryptdir
-  - cd $GOPATH"/src/github.com/evantbyrne/cryptdir
+  - git clone --recursive https://github.com/evantbyrne/cryptdir.git $GOPATH"/src/github.com/evantbyrne/cryptdir"
+  - cd $GOPATH"/src/github.com/evantbyrne/cryptdir"
 
 script:
   - go test -v ./lib
