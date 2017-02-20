@@ -9,7 +9,6 @@ Utility for managing folders containing files encrypted with AES-256 GCM and Scr
 
 Make sure that [Go](https://golang.org/) is installed and your PATH includes GOBIN. Then run the following:
 
-    $ go get golang.org/x/crypto
     $ git clone --recursive https://github.com/evantbyrne/cryptdir.git $GOPATH"/src/github.com/evantbyrne/cryptdir"
     $ go install github.com/evantbyrne/cryptdir
 

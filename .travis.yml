@@ -3,5 +3,8 @@ language: go
 go:
   - 1.8.x
 
+install:
+  - git clone --recursive https://github.com/evantbyrne/cryptdir.git evantbyrne/cryptdir
+
 script:
   - go test -v ./lib
