@@ -27,5 +27,5 @@ func VersionedSplit(in []byte) (version uint32, ciphertext, nonce, salt []byte, 
 	nonce = in[16:28]
 	ciphertext = in[28:]
 
-	return version, salt, nonce, ciphertext, nil
+	return version, ciphertext, nonce, salt, nil
 }

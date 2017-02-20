@@ -64,7 +64,7 @@ func DecryptFile(path string, password []byte) (cleartext, nonce, key, salt []by
 			os.Exit(1)
 		}
 
-		if _, salt, nonce, ciphertext, err = VersionedSplit(configData); err != nil {
+		if _, ciphertext, nonce, salt, err = VersionedSplit(configData); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}

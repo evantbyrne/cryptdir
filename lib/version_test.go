@@ -20,7 +20,7 @@ func TestVersionedJoinAndSplit(t *testing.T) {
 	version, ciphertext, nonce, salt, err := VersionedSplit(joined)
 	assert.Nil(t, err)
 	assert.Equal(t, Version, version)
-	assert.Equal(t, "abcdefghijkl", string(ciphertext))
+	assert.Equal(t, "abcdefghijkl", string(salt))
 	assert.Equal(t, "mnopqrstuvwx", string(nonce))
-	assert.Equal(t, "yz", string(salt))
+	assert.Equal(t, "yz", string(ciphertext))
 }
